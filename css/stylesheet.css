@@ -1,0 +1,28 @@
+body{
+	background: url("../img/newBallon.jpg") fixed;
+	background-size:cover;
+	margin:10px;
+}
+
+ul{
+	list-style: none;
+}
+
+li{
+	float:left;
+	margin-left:10px;
+}
+
+a:link{
+	text-decoration: none;
+	color:black;
+}
+
+a:visited{
+	color:black;
+}
+
+span{
+	display:inline-block;
+}
+

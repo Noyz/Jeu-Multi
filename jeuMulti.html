@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="jquery-1.11.3.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
+    <link type="text/css" href="css/stylesheet.css" rel="stylesheet"/>
+  </head>
+  <script src="https://cdn.socket.io/socket.io-1.0.0.js"></script>
+  <style>
+    /*body {
+      cursor:none;
+    }*/
+  </style>
+  	
+  <body>
+    <img src="img/balloonDestroyer.png"/>
+    <div id="presentation" >
+      <p>
+        Bienvenue sur la foire des DIWJS!<br>
+        Affrontez un adversaire en ligne et découvrer qui est le meilleur tireur!<br>
+      </p>
+      <div>
+        <ul>
+          <li><a href="#" id="subscript">Inscription</a></li>
+          <li><a href="#" id="connect">Connexion</a></li>
+          <li><a href="#" id="scores">Tableau de bord</a></li>
+        </ul>
+      </div>
+      <br>
+    </div>
+    <div id="affichageScore" style="display:none" >
+      <span>
+        <img src="img/redTeam.jpg" style="height:100px;width:100px"/>
+        <p id="pseudo"></p>
+        <div id ="score"></div>
+      </span>
+
+      <span style="float:right">
+        <img src="img/blueTeam.jpg" id="imgFoe" style="display:none;height:100px;width:100px"/>
+        <p id="foePseudo"> En attente deuxième joueur </p>
+        <div id ="scoreAdv"></div>
+      </span>
+    </div>
+
+    <div id="subscription" style="display:none" >
+      <h1>Inscription</h1>
+        <form method="post" action="/sub" id="formSub">
+          <p>Afin de pouvoir joueur, veuillez choisir un pseudonyme et un mot de passe  </p>
+          <p>Pseudo : <input type="text" name="usernameSub" required/></p>
+          <p>Mot de passe : <input type="password" name="passwordSub" required/></p>
+          <p><input type="submit" value="Jouer !"/></p>
+        </form>
+    </div>
+    <div id="connexion" style="display:none">
+      <h1>Connexion</h1>
+        <form method="post" action="/connect" id="formLog">
+          <p>Déjà venu une première fois? Rentrez votre nom d'utilisateur </p>
+          <p>Pseudo : <input type="text" name="usernameLog" required/></p>
+          <p>Mot de passe : <input type="password" name="passwordLog" required/></p>
+          <p><input type="submit" value="Jouer !"/></p>
+        </form>
+    </div>
+    <div id="scoreBoard" style="display:none">
+      <p>Liste des joueurs</p>
+      <table border="1">
+        <thead>
+          <th>Pseudo</th>
+          <th>Victoire</th>
+          <th>Défaite</th>
+          <th>Partie Joué</th>
+        </thead>
+        <tbody id ="list">
+        </tbody>
+      </table>
+    </div>
+        <p id="message"></p>
+  </body>
+</html>

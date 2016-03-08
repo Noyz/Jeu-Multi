@@ -1,0 +1,28 @@
+{
+  "name": "ballondestroyers",
+  "version": "1.0.0",
+  "description": "Projet IFOCOP",
+  "main": "jeuexpress.js",
+  "dependencies": {
+    "cookie-parser": "^1.4.1",
+    "express": "^4.13.4",
+    "body-parser": "^1.15.0",
+    "express-socket.io-session": "^1.3.1",
+    "express-session": "^1.13.0",
+    "mongodb": "^2.1.7",
+    "jade": "^1.11.0",
+    "node": "^0.0.0",
+    "path": "^0.12.7",
+    "socket.io": "^1.4.5",
+    "nodemon": "^1.8.1"
+  },
+    "engines": {
+    "node": "4.2.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
