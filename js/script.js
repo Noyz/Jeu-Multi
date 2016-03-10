@@ -17,6 +17,7 @@ window.addEventListener('DOMContentLoaded', function(){
   		var socket = io.connect('http://ballonsblows.herokuapp.com');
 
      /////////////////Click du formulaire de l'inscription////////////////
+     socket.emit
         $('#formSub').on('submit', function(event){
           event.preventDefault();
           $.ajax({
@@ -86,6 +87,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
        //Affiche le pseudo de l'adversaire dans le cas d'une connection ou d'une inscription
         socket.on('afficheEnnemieSub', function(data){
+          $('#Object0').addClass('masque');
           $('#foePseudo').text(data.champs2);
           $('#imgFoe').css('display','block');
           socket.emit('pseudoAdverse', {foeNickname :  $('#foePseudo').text()})
@@ -258,9 +260,6 @@ window.addEventListener('DOMContentLoaded', function(){
         }
       };
 
-
-
-
       socket.on('cleanDetection', function(data){
         stopDetection = false;
       });
@@ -270,11 +269,14 @@ window.addEventListener('DOMContentLoaded', function(){
       });
 
       socket.on('verificationDone', function(data){
-        console.log(data)
-        alert('Désolé, la partie est actuellement complète. Veuillez réessayer ultérieurement.')
+        alert('Désolé, la partie est actuellement complète. Veuillez réessayer ultérieurement.');
+        window.location.reload();
       });
       
       socket.on('disparitionAllBallons', function(data){
+        setTimeout(function(){
+          $('#toRemove').css('display', 'none');
+        }, 500);
           HTMLBallonElement.remove();
           scoreAdverse.innerHTML = data.score;
       });
@@ -345,7 +347,7 @@ window.addEventListener('DOMContentLoaded', function(){
       });
 
       setInterval(function(){
-        if(score == 1){
+        if(score == 5){
           if(detectionWinner){
             var ratio = {
               gagnant:$('#pseudo').text(),
@@ -362,5 +364,4 @@ window.addEventListener('DOMContentLoaded', function(){
         alert('Trop de personne connecté simultanément. Veuillez attendre la fin de la partie.')
         location.reload();
       });
-
   	});

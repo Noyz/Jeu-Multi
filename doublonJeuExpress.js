@@ -10,6 +10,7 @@ var bodyParser = require ('body-parser');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var MongoClient = require('mongodb').MongoClient;
+var url ="mongodb://192.168.0.30:27017/multi"; // Base contenant collection utilisateurs
 var mongo = require('mongodb');
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
@@ -39,10 +40,10 @@ app.post('/afficheScore', function(req,res){
 			data.forEach(
 				function(cetUtilisateur){
 					if(tableauDesScores.indexOf(cetUtilisateur) > -1){
-						
+						console.log("Deuxieme fois")
 					}else {
 					tableauDesScores.push(cetUtilisateur)
-					
+					console.log(data)
 					}
 				}
 			)
@@ -55,7 +56,7 @@ const socketIo = require('socket.io');
 
 var IOServer = socketIo(httpServer);
 
-var scopes = {},pseudoUser,apparitionBallon, ballons = {},winnner,pseudoAdv, i = 0,tab = ["img/blue.png", "img/yellow.png","img/green.jpg","img/red.png" ], tabUsername = [],maDb, tableauDesScores = [];
+var scopes = {},pseudoUser, ballons = {},pseudoAdv, i = 0,tab = ["img/blue.png", "img/yellow.png","img/green.jpg","img/red.png" ], tabUsername = [],maDb, tableauDesScores = [];
 function getRandomArbitrary(min, max) {
 	return Math.random() * (max - min) + min;
 };
@@ -68,7 +69,7 @@ io.on('connection', function(socket){
 		collection.find({username:pseudoUser}, {_id:0}).toArray(function(err, data){ 
 			if(data == ''){ //Compte n'existe pas.
 				avertissement = 'Votre compte à correctement été crée ' + pseudoUser;
-				collection.insertOne({username : pseudoUser, password:req.body.passwordSub, identifiant:socket.id, victoire: +0, defaite: +0, partieJoue: +0});
+				collection.insertOne({username : pseudoUser, password:req.body.passwordSub, identifiant:socket.id, victoire:0, defaite:0, partieJoue:0});
 				res.send({indication : avertissement});//Renvoie du message côté client dans ce cas
 				
 			}else{//Compte existe.
@@ -134,13 +135,12 @@ io.on('connection', function(socket){
 			socket.broadcast.emit('changementPositionDeSonViseur', data);
 		});
 
-
 		var randomsrc = getRandomArbitrary(0, 4);
 		var positionYrandom = getRandomArbitrary(0, 600);
 		var positionXrandom = getRandomArbitrary(0, 1200);
 		var source = Math.floor(randomsrc);
 		var ballon = {
-			id:'toRemove',
+			id:'Object' + i,
 			position:'absolute',
 			height:'150px',
 			width:'150px',
@@ -155,10 +155,9 @@ io.on('connection', function(socket){
 		io.emit('collisionBallons', ballons);
 
 		socket.on('disparitionBallons', function(message) {
-			io.emit('bugBallon', "message");
 		    for(index in ballons){
 		    	socket.broadcast.emit('disparitionAllBallons', message);
-		    		apparitionBallon = setTimeout(function(){
+		    	setTimeout(function(){
 		    		var randomsrc = getRandomArbitrary(0, 4);
 					var positionYrandom = getRandomArbitrary(0, 500);
 					var positionXrandom = getRandomArbitrary(0, 1000);
@@ -206,7 +205,6 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('endGame', function(data){
-		clearInterval(apparitionBallon);
 		var foe = data.ratio.perdant;
 		var ally = data.ratio.gagnant;
 		var collection = maDb.collection('utilisateurs');
@@ -215,7 +213,7 @@ io.on('connection', function(socket){
 				console.log('Imposssible d\'insérer dans la base de données');
 			}else{
 				collection.find({username:data.ally}, {Victoire:1, _id:0}).toArray(function(err, data){
-					collection.updateOne({username:ally},{$inc:{"Victoire": +1,"partieJoue": +1, "Defaite": +0}});
+					collection.updateOne({username:ally},{$inc:{"Victoire": +1,"partieJoue": +1}});
 				});
 			}
 		});
@@ -224,9 +222,9 @@ io.on('connection', function(socket){
 				console.log('Imposssible d\'insérer dans la base de données');
 			}else{
 				collection.find({username:foe}, {Defaite:1, _id:0}).toArray(function(err, data){
-					collection.updateOne({username:foe},{$inc:{"Defaite": +1,"partieJoue": +1,"Victoire": +0}});
+					console.log(parseInt(data))
+					collection.updateOne({username:foe},{$inc:{"Defaite": +1,"partieJoue": +1}});
 				});
-
 			}
 		});
 			io.emit('stopGame', data.ratio.gagnant);
@@ -247,16 +245,15 @@ setInterval(function(){
 
 
 
-var url ="mongodb://utilisateurs:okamiden@ds023458.mlab.com:23458/heroku_733gnm6p";
+var MongoClient = require('mongodb').MongoClient;
+var url ="mongodb://localhost:27017/multi";
 
 MongoClient.connect(url, function(err, db){
 	maDb = db;
 	if(err){
 		console.log('Impossible de charger la base de données');
 	}else {	
-		server.listen(process.env.PORT || 3000, function(){
-		  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-		});
+		server.listen(1010)
 	}
 });
 
