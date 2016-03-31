@@ -14,7 +14,14 @@ window.addEventListener('DOMContentLoaded', function(){
       var preventBugScore = true;
       var requeteTableau = true;
 
-  		var socket = io.connect('http://ballonsblows.herokuapp.com')
+  		// var socket = io.connect('http://ballonsblows.herokuapp.com');
+      var socket = io.connect('http://192.168.0.30:1010');
+
+      socket.emit('mySocketForConnect', {message:'texte d\'exemple'});
+      socket.on('socketStored', function(data){
+        $('.nbrConnection').text(data.message);
+        console.log(data.message);
+      });
 
      /////////////////Click du formulaire de l'inscription////////////////
      socket.emit
@@ -98,12 +105,6 @@ window.addEventListener('DOMContentLoaded', function(){
           $('#imgFoe').css('display','block');
           socket.emit('pseudoAdverse', {foeNickname : $('#foePseudo').text()});
         });
-
-        /////////////////Click sur tableau de bord////////////////
-       
-
-        
-        
 
          ////////////////////////////////////////////CREATION DE MON VISEUR//////////////////////////////////////////
 

@@ -55,30 +55,12 @@ const socketIo = require('socket.io');
 
 var IOServer = socketIo(httpServer);
 
-var scopes = {},pseudoUser,sock,startLoop = 0, apparitionBallon, ballons = {},winnner,pseudoAdv, i = 0,tab = ["img/blue.png", "img/yellow.png","img/green.jpg","img/red.png" ], tabConnect=[],tabUsername = [],maDb, tableauDesScores = [];
+var scopes = {},pseudoUser,apparitionBallon, ballons = {},winnner,pseudoAdv, i = 0,tab = ["img/blue.png", "img/yellow.png","img/green.jpg","img/red.png" ], tabUsername = [],maDb, tableauDesScores = [];
 function getRandomArbitrary(min, max) {
 	return Math.random() * (max - min) + min;
 };
 
 io.on('connection', function(socket){	
-	
-	
-	socket.on('mySocketForConnect', function(data){
-		sock = socket.id;
-		tabConnect.push(sock);
-		startLoop = 1;
-		socket.emit('socketStored', {message:tabConnect.length});
-	});
-
-	
-		setInterval(function(){
-			if(!socket.connected){
-				console.log(tabConnect)
-			}
-		}, 5000);
-	
-
-
 
 	app.post('/sub', function(req,res){
 		 pseudoUser = req.body.usernameSub; //Récupération de la valeur du champs texte
@@ -257,7 +239,6 @@ setInterval(function(){
     for(index in scopes){
     	if(!io.sockets.connected[scopes[index].id]){ // Si il y'a déconnexion d'un viseur, supprime son entrée du tableau tabUsername.
     		tabUsername.splice(scopes[index]);
-    		tabConnect.splice(0,1);
         	io.emit('detruireViseur', scopes[index]);
         	delete scopes[index];
     	};
@@ -266,17 +247,18 @@ setInterval(function(){
 
 
 
-// var url ="mongodb://utilisateurs:okamiden@ds023458.mlab.com:23458/heroku_733gnm6p";
-var url ="mongodb://192.168.0.30:27017/multi";
+var MongoClient = require('mongodb').MongoClient;
+// var url ="mongodb://localhost:27017/multi";
+var url ="mongodb://utilisateurs:okamiden@ds023458.mlab.com:23458/heroku_733gnm6p";
 MongoClient.connect(url, function(err, db){
 	maDb = db;
 	if(err){
 		console.log('Impossible de charger la base de données');
 	}else {	
-		server.listen(1010)
-		// server.listen(process.env.PORT || 3000, function(){
-		//   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-		// });
+		// server.listen(1010);
+		server.listen(process.env.PORT || 3000, function(){
+		  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+		});
 	}
 });
 
